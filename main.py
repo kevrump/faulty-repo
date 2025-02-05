@@ -2,7 +2,7 @@ from utils import fetch_data
 
 
 def main():
-    response = fetch_data(1234)  # ❌ Incorrect: fetch_data() expects a string
+    response = fetch_data("https://example.com")  # Provide a valid URL as a string
     print(response)
 
 
