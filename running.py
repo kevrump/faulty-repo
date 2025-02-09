@@ -1,27 +1,25 @@
-import requests
-import time
-
-
 def running():
+    import concurrent.futures
+
     urls = ["https://jsonplaceholder.typicode.com/posts/1"] * 5
     responses = []
-    for url in urls:
+
+    def fetch_url(url):
         response = requests.get(url)
         if response.status_code == 200:
-            responses.append(response.json())
+            return response.json()
+        return None
 
-    data = [i for i in range(5000)]
-    processed_data = []
-    for item in data:
-        if item not in processed_data:
-            processed_data.append(item)
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        fetched_responses = executor.map(fetch_url, urls)
 
-    large_list_1 = list(range(3000))
-    large_list_2 = list(range(2000, 5000))
-    common_elements = []
-    for item in large_list_1:
-        if item in large_list_2:
-            common_elements.append(item)
+    responses = [response for response in fetched_responses if response is not None]
+
+    processed_data = list(range(5000))
+
+    large_list_1 = set(range(3000))
+    large_list_2 = set(range(2000, 5000))
+    common_elements = list(large_list_1 & large_list_2)
 
     time.sleep(2)
 
